@@ -1,0 +1,42 @@
+name    "wordscan"
+summary "Dictionary and Thesaurus Scanner"
+version "0.1.0"
+
+usage  "find <dictionary> <regex> [--len <len>]"
+help   "Search one of the wordlist files for <regex>"
+option "-l --len <len>", "Set the maximum length of the result"
+action :find do |args|
+  dictionary = args['<dictionary>']
+  regex      = args['<regex>']
+  len   = args['--len'] ? args['--len'].to_i : false
+  file       = "dict/#{dictionary}.txt"
+  abort "Dictionary not found" unless File.exist? file
+
+  File.readlines(file).each do |line|
+    line.strip!
+    next if line[0] == '#' 
+    next if len and line.size > len
+    say "!txtgrn!#{line}" if line =~ /#{regex}/i
+  end
+end
+
+usage  "like <word> [<regex> --len <len>]"
+help   "Search the thesaurus for similar words. If <regex> is supplied, show only matching synonyms"
+action :like do |args|
+  word  = args['<word>']
+  regex = args['<regex>']
+  len   = args['--len'] ? args['--len'].to_i : false
+  file  = "thes/thes.txt"
+  abort "Thesaurus not found" unless File.exist? file
+
+  File.readlines(file).each do |line|
+    if line =~ /^#{word},/
+      words = line.strip.split ','
+      words.each do |word|
+        next if len and word.size > len
+        next if regex and word =~ /#{regex}/i
+        say "!txtgrn!#{word}" 
+      end
+    end
+  end
+end
