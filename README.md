@@ -5,11 +5,6 @@
 
 It is using [Runfile](https://github.com/DannyBen/runfile).
 
-## Features
-
-- Check for domain using DNS (faster) or Whois lookup
-- Scout for multiple domain ideas at once
-- Generate name ideas from patterns
 
 ## Install Gem Dependencies
 
