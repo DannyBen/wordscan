@@ -2,10 +2,13 @@ name    "wordscan"
 summary "Dictionary and Thesaurus Scanner"
 version "0.1.0"
 
-usage  "find <dictionary> <regex> [--len <len>]"
-help   "Search one of the wordlist files for <regex>"
-option "-l --len <len>", "Set the maximum length of the result"
-action :find do |args|
+usage   "find <dictionary> <regex> [--len <len>]"
+help    "Search one of the wordlist files for <regex>"
+option  "-l --len <len>", "Find words no longer than <len>"
+example 'find animal ^d'
+example 'find animal "^b.{1,3}$"'
+example 'find noun . --len 3'
+action  :find do |args|
   dictionary = args['<dictionary>']
   regex      = args['<regex>']
   len   = args['--len'] ? args['--len'].to_i : false
@@ -20,9 +23,11 @@ action :find do |args|
   end
 end
 
-usage  "like <word> [<regex> --len <len>]"
-help   "Search the thesaurus for similar words. If <regex> is supplied, show only matching synonyms"
-action :like do |args|
+usage   "like <word> [<regex> --len <len>]"
+help    "Search the thesaurus for similar words. If <regex> is supplied, show only matching synonyms"
+example 'like network -l5'
+example 'like arrive ^t'
+action  :like do |args|
   word  = args['<word>']
   regex = args['<regex>']
   len   = args['--len'] ? args['--len'].to_i : false
@@ -34,9 +39,18 @@ action :like do |args|
       words = line.strip.split ','
       words.each do |word|
         next if len and word.size > len
-        next if regex and word =~ /#{regex}/i
+        next if regex and word !~ /#{regex}/i
         say "!txtgrn!#{word}" 
       end
     end
   end
 end
+
+usage   "index"
+help    "Show list of available dictionaries"
+action  :index do
+  files = Dir['dict/*.txt'].map { |path| "- " + File.basename(path, '.txt') }
+  say "!txtgrn!Available dictionaries:"
+  say files.join "\n"
+end
+
