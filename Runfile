@@ -2,35 +2,47 @@ name    "wordscan"
 summary "Dictionary and Thesaurus Scanner"
 version "0.1.0"
 
-usage   "find <dictionary> <regex> [--len <len>]"
-help    "Search one of the wordlist files for <regex>"
+usage   "find <dictionaries> <regex> [--len <len> --compact]"
+help    "Search the dictionary files for <regex>. The <dictionaries> parameter can be a name of a single dictionary (e.g., animals) or a colon separated list of dictionaries (e.g., noun:adjective). You can use the word 'random' as a dictionary name."
 option  "-l --len <len>", "Find words no longer than <len>"
+option  "-c --compact", "Show more than one result per line"
 example 'find animal ^d'
 example 'find animal "^b.{1,3}$"'
-example 'find noun . --len 3'
+example 'find noun:adjective . --len 3'
+example 'find random ^....$ --compact'
 action  :find do |args|
-  dictionary = args['<dictionary>']
-  regex      = args['<regex>']
-  len   = args['--len'] ? args['--len'].to_i : false
-  file       = "dict/#{dictionary}.txt"
-  abort "Dictionary not found" unless File.exist? file
+  dictionaries = args['<dictionaries>'].split ':'
+  regex        = args['<regex>']
+  separator    = args['--compact'] ? "\t " : ''
+  len          = args['--len'] ? args['--len'].to_i : false
 
-  File.readlines(file).each do |line|
-    line.strip!
-    next if line[0] == '#' 
-    next if len and line.size > len
-    say "!txtgrn!#{line}" if line =~ /#{regex}/i
+  if dictionaries[0] == "random"
+    dictionaries = [random_dictionary]
+    say "!txtblu!Dictionary: #{dictionaries[0]}"
+  end
+
+  dictionaries.each do |dict|
+    file = "dict/#{dict}.txt"
+    abort "\nDictionary not found (#{file})" unless File.exist? file
+
+    File.readlines(file).each do |line|
+      line.strip!
+      next if line[0] == '#' 
+      next if len and line.size > len
+      say "!txtgrn!#{line}#{separator}" if line =~ /#{regex}/i
+    end
   end
 end
 
-usage   "like <word> [<regex> --len <len>]"
+usage   "like <word> [<regex> --len <len> --compact]"
 help    "Search the thesaurus for similar words. If <regex> is supplied, show only matching synonyms"
 example 'like network -l5'
 example 'like arrive ^t'
 action  :like do |args|
-  word  = args['<word>']
-  regex = args['<regex>']
-  len   = args['--len'] ? args['--len'].to_i : false
+  word      = args['<word>']
+  regex     = args['<regex>']
+  len       = args['--len'] ? args['--len'].to_i : false
+  separator = args['--compact'] ? "\t " : ''
   file  = "thes/thes.txt"
   abort "Thesaurus not found" unless File.exist? file
 
@@ -40,7 +52,7 @@ action  :like do |args|
       words.each do |word|
         next if len and word.size > len
         next if regex and word !~ /#{regex}/i
-        say "!txtgrn!#{word}" 
+        say "!txtgrn!#{word}#{separator}" 
       end
     end
   end
@@ -54,3 +66,7 @@ action  :index do
   say files.join "\n"
 end
 
+def random_dictionary
+  files = Dir['dict/*.txt'].map { |path| File.basename(path, '.txt') }
+  files.sample
+end
