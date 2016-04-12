@@ -1,10 +1,10 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    colsole (0.2.0)
+    colsole (0.3.3)
     docopt (0.5.0)
-    runfile (0.5.2)
-      colsole (~> 0.2)
+    runfile (0.6.2)
+      colsole (~> 0.3)
       docopt (~> 0.5)
 
 PLATFORMS
