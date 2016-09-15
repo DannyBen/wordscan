@@ -3,7 +3,7 @@ GEM
   specs:
     colsole (0.4.1)
     docopt (0.5.0)
-    runfile (0.7.1)
+    runfile (0.8.1)
       colsole (~> 0.3)
       docopt (~> 0.5)
 
@@ -14,4 +14,4 @@ DEPENDENCIES
   runfile
 
 BUNDLED WITH
-   1.10.6
+   1.12.5
