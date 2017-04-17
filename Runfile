@@ -1,6 +1,6 @@
-name    "wordscan"
+title   "wordscan"
 summary "Dictionary and Thesaurus Scanner"
-version "0.1.0"
+version "0.1.1"
 
 usage   "find <dictionaries> <regex> [--len <len> --compact]"
 help    "Search the dictionary files for <regex>. The <dictionaries> parameter can be a name of a single dictionary (e.g., animals) or a colon separated list of dictionaries (e.g., noun:adjective). You can use the word 'random' as a dictionary name."
