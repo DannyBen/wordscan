@@ -7,5 +7,5 @@ rvm:
 notifications:
   email: false
 
-script: bundle exec rake
+script: bundle exec rspec
 
