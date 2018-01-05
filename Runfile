@@ -32,6 +32,7 @@ action  :find do |args|
       say "!txtgrn!#{line}#{separator}" if line =~ /#{regex}/i
     end
   end
+  say '' unless separator.empty?
 end
 
 usage   "like <word> [<regex> --len <len> --compact]"
@@ -52,10 +53,11 @@ action  :like do |args|
       words.each do |word|
         next if len and word.size > len
         next if regex and word !~ /#{regex}/i
-        say "!txtgrn!#{word}#{separator}" 
+        say "!txtgrn!#{word}#{separator}"
       end
     end
   end
+  say '' unless separator.empty?
 end
 
 usage   "index"
