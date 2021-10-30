@@ -1,3 +1,6 @@
+require 'colsole'
+include Colsole
+
 title   "wordscan"
 summary "Dictionary and Thesaurus Scanner"
 version "0.1.1"
