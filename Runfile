@@ -1,27 +1,24 @@
-require 'colsole'
-include Colsole
-
 title   "wordscan"
 summary "Dictionary and Thesaurus Scanner"
 version "0.1.1"
 
-usage   "find <dictionaries> <regex> [--len <len> --compact]"
-help    "Search the dictionary files for <regex>. The <dictionaries> parameter can be a name of a single dictionary (e.g., animals) or a colon separated list of dictionaries (e.g., noun:adjective). You can use the word 'random' as a dictionary name."
-option  "-l --len <len>", "Find words no longer than <len>"
-option  "-c --compact", "Show more than one result per line"
-example 'find animal ^d'
-example 'find animal "^b.{1,3}$"'
-example 'find noun:adjective . --len 3'
-example 'find random ^....$ --compact'
+usage   "find DICTIONARIES REGEX [--len N --compact]"
+help    "Search the dictionary files for REGEX. The DICTIONARIES parameter can be a name of a single dictionary (e.g., animals) or a colon separated list of dictionaries (e.g., noun:adjective). You can use the word 'random' as a dictionary name."
+option  "--len, -l N", "Find words no longer than N"
+option  "--compact, -c", "Show more than one result per line"
+example 'run find animal ^d'
+example 'run find animal "^b.{1,3}$"'
+example 'run find noun:adjective . --len 3'
+example 'run find random ^....$ --compact'
 action  :find do |args|
-  dictionaries = args['<dictionaries>'].split ':'
-  regex        = args['<regex>']
+  dictionaries = args['DICTIONARIES'].split ':'
+  regex        = args['REGEX']
   separator    = args['--compact'] ? "\t " : ''
   len          = args['--len'] ? args['--len'].to_i : false
 
   if dictionaries[0] == "random"
     dictionaries = [random_dictionary]
-    say "!txtblu!Dictionary: #{dictionaries[0]}"
+    say "b`Dictionary: #{dictionaries[0]}`"
   end
 
   dictionaries.each do |dict|
@@ -32,19 +29,19 @@ action  :find do |args|
       line.strip!
       next if line[0] == '#' 
       next if len and line.size > len
-      say "!txtgrn!#{line}#{separator}" if line =~ /#{regex}/i
+      say "g`#{line}`#{separator}" if line =~ /#{regex}/i
     end
   end
   say '' unless separator.empty?
 end
 
-usage   "like <word> [<regex> --len <len> --compact]"
-help    "Search the thesaurus for similar words. If <regex> is supplied, show only matching synonyms"
-example 'like network -l5'
-example 'like arrive ^t'
+usage   "like WORD [REGEX --len N --compact]"
+help    "Search the thesaurus for similar words. If REGEX is supplied, show only matching synonyms"
+example 'run like network -l5'
+example 'run like arrive ^t'
 action  :like do |args|
-  word      = args['<word>']
-  regex     = args['<regex>']
+  word      = args['WORD']
+  regex     = args['REGEX']
   len       = args['--len'] ? args['--len'].to_i : false
   separator = args['--compact'] ? "\t " : ''
   file  = "thes/thes.txt"
@@ -56,7 +53,7 @@ action  :like do |args|
       words.each do |word|
         next if len and word.size > len
         next if regex and word !~ /#{regex}/i
-        say "!txtgrn!#{word}#{separator}"
+        say "g`#{word}`#{separator}"
       end
     end
   end
@@ -67,11 +64,13 @@ usage   "index"
 help    "Show list of available dictionaries"
 action  :index do
   files = Dir['dict/*.txt'].map { |path| "- " + File.basename(path, '.txt') }
-  say "!txtgrn!Available dictionaries:"
+  say "g`Available dictionaries:`"
   say files.join "\n"
 end
 
-def random_dictionary
-  files = Dir['dict/*.txt'].map { |path| File.basename(path, '.txt') }
-  files.sample
+helpers do
+  def random_dictionary
+    files = Dir['dict/*.txt'].map { |path| File.basename(path, '.txt') }
+    files.sample
+  end
 end

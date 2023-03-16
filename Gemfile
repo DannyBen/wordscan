@@ -4,5 +4,5 @@ gem "runfile", require: false
 
 group :test do 
   gem 'rspec'
-  gem 'rspec_fixtures'
+  gem 'rspec_approvals'
 end

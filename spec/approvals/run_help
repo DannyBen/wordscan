@@ -1,0 +1,45 @@
+wordscan
+
+  Dictionary and Thesaurus Scanner
+
+Usage:
+  run find DICTIONARIES REGEX [--len N --compact]
+  run like WORD [REGEX --len N --compact]
+  run index
+  run (--help | -h)
+  run --version
+
+Commands:
+  [1mfind[0m
+    Search the dictionary files for REGEX. The DICTIONARIES parameter can be a
+    name of a single dictionary (e.g., animals) or a colon separated list of
+    dictionaries (e.g., noun:adjective). You can use the word 'random' as a
+    dictionary name.
+
+  [1mlike[0m
+    Search the thesaurus for similar words. If REGEX is supplied, show only
+    matching synonyms
+
+  [1mindex[0m
+    Show list of available dictionaries
+
+Options:
+  --len, -l N
+    Find words no longer than N
+
+  --compact, -c
+    Show more than one result per line
+
+  --help, -h
+    Show this message
+
+  --version
+    Show version number
+
+Examples:
+  run find animal ^d
+  run find animal "^b.{1,3}$"
+  run find noun:adjective . --len 3
+  run find random ^....$ --compact
+  run like network -l5
+  run like arrive ^t
